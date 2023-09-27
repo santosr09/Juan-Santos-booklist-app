@@ -1,0 +1,20 @@
+# Steps to implement CONFIG SERVER:
+
+# ADD THESE DEPENDENCIES:
+
+
+		<!-- Config Server -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-config</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-bootstrap</artifactId>
+		</dependency>
+		
+		
+# IN PROPERTIES FILE ADD THE CONFIG URI:
+
+spring.cloud.config.uri: http://myconfigserver.com
+

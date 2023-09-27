@@ -1,0 +1,49 @@
+--http://localhost:8080/books/1
+
+--GET ALL
+[
+  {
+    "id": 1,
+    "name": "Revelaciones",
+    "description": "",
+    "publisher": "Omega",
+    "author": "Juan Villa",
+    "isbn": "1234567891235",
+    "publishedDate": "2000/05/18",
+    "categories": [
+      
+    ],
+    "users": [
+      
+    ]
+  },
+  {
+    "id": 2,
+    "name": "New Spring",
+    "description": "",
+    "publisher": "Jvm",
+    "author": "Rod Johnson",
+    "isbn": "1234562391235",
+    "publishedDate": "2003/03/18",
+    "categories": [
+      
+    ],
+    "users": [
+      
+    ]
+  }
+]
+
+--POST
+
+{
+    "id": 1,
+    "name": "Revelaciones",
+    "description": "",
+    "publisher": "Omega",
+    "author": "Juan Villa",
+    "isbn": "1234567891235",
+    "publishedDate": "2000/05/18",
+    "categories": [],
+    "users": []
+}

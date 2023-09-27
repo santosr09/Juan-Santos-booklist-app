@@ -1,0 +1,271 @@
+{
+	"info": {
+		"_postman_id": "eff031b6-c43b-4563-84ce-00a3dd36aba6",
+		"name": "Users",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"console.log(pm.response.status)\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    \r",
+							"    //pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/users",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "filter by User ID",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/users/:id",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"users",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "b41a4866-0094-4a75-ac74-b6c495637326"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create user",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var moment = require('moment');\r",
+							"\r",
+							"pm.environment.set('currentdate', moment().format((\"YYYY-MM-DD\")));\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "default",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": " {\r\n        \"firstName\": \"{{$randomFirstName}}\",\r\n        \"lastName\": \"{{$randomLastName}}\",\r\n        \"country\": \"{{$randomCountry}}\",\r\n        \"registrationDate\": \"{{currentdate}}\",\r\n        \"username\": \"{{$randomUserName}}\",\r\n        \"password\": \"1234\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/users",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Books from user",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/users/:id/books",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"users",
+						":id",
+						"books"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "3bd17244-af3a-4097-875f-af6e4fa30d7b"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add book to user",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"bookId\": 2\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/users/:id/books?book_id=3a483d1a-f26d-40c8-bc64-61d3817a8d0f",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"users",
+						":id",
+						"books"
+					],
+					"query": [
+						{
+							"key": "book_id",
+							"value": "3a483d1a-f26d-40c8-bc64-61d3817a8d0f"
+						}
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "2e4c281b-d936-4615-b302-32afdff182c4"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete by ID",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/users/:id",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"users",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "3bd17244-af3a-4097-875f-af6e4fa30d7b"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "http://localhost:8082",
+			"type": "default"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "default"
+		}
+	]
+}

@@ -1,0 +1,56 @@
+version: '3'
+services:
+  book-discovery-service:
+    image: santosr09/book-discovery-service
+    ports:
+      - 8010:8010
+    environment:
+      - spring.profiles.active=production
+      - eureka.client.serviceUrl.defaultZone=http://ec2-3-131-159-236.us-east-2.compute.amazonaws.com:8010/eureka
+      - spring.cloud.config.uri=http://ec2-18-191-130-250.us-east-2.compute.amazonaws.com:8888
+  book-api-gateway:
+    image: santosr09/book-api-gateway
+    ports:
+      - 8082:8082
+    environment:
+      - spring.application.name=book-api-gateway
+      - spring.profiles.active=production
+      - spring.cloud.config.uri=http://ec2-18-191-130-250.us-east-2.compute.amazonaws.com:8888
+  book-service:
+    image: santosr09/book-service
+    ports:
+      - 8088:8088
+    environment:
+      - spring.profiles.active=production
+      - spring.cloud.config.uri=http://ec2-18-191-130-250.us-east-2.compute.amazonaws.com:8888
+    volumes:
+      - api-logs:/api-logs
+  book-user-service:
+    image: santosr09/book-user-service
+    ports:
+      - 8089:8089
+    environment:
+      - spring.application.name=book-user-service
+      - spring.profiles.active=production
+      - spring.cloud.config.uri=http://ec2-18-191-130-250.us-east-2.compute.amazonaws.com:8888
+      - spring.zipkin.baseUrl=http://zipkin:9411
+    volumes:
+      - api-logs:/api-logs
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - 9411:9411
+  elasticsearch:
+    image: elasticsearch:7.17.0
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      - discovery.type=single-node
+  kibana:
+    image: kibana:7.17.0
+    ports:
+      - 5601:5601
+volumes:
+  api-logs:
+    driver: local

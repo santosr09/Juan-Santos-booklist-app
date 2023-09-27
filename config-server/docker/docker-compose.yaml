@@ -1,0 +1,19 @@
+version: '3'
+services:
+  config-server:
+    image: santosr09/book-config-server
+    ports:
+      - 8888:8888
+    environment:
+      - spring.rabbitmq.host=rabbitmq
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - 15672:15672
+      - 5672:5672
+      - 5671:5671
+    volumes:
+      - rabbit-data:/var/lib/rabbitmq
+volumes:
+  rabbit-data:
+    driver: local

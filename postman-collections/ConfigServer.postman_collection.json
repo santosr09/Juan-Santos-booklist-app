@@ -1,0 +1,143 @@
+{
+	"info": {
+		"_postman_id": "e8f14ce0-d999-4f06-9e93-a21a10207aa2",
+		"name": "ConfigServer",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Bus refresh",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/actuator/busrefresh",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"actuator",
+						"busrefresh"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Native",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8888/book-config-server/native",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"book-config-server",
+						"native"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Encrypt",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "secret"
+				},
+				"url": {
+					"raw": "{{baseURL}}/encrypt",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"encrypt"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Default",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "juan"
+				},
+				"url": {
+					"raw": "{{baseURL}}/user-service/default",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"user-service",
+						"default"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Decrypt",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "53191f24eb0369a1a749dc8091607a7b79c80d3519e7e4d66b5796b42a30a21e"
+				},
+				"url": {
+					"raw": "http://localhost:8888/decrypt",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8888",
+					"path": [
+						"decrypt"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "http://172.31.81.88:8888",
+			"type": "default"
+		}
+	]
+}

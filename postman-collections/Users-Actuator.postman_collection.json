@@ -1,0 +1,96 @@
+{
+	"info": {
+		"_postman_id": "122d4f6c-6542-4543-9169-42a0124ec717",
+		"name": "Users-Actuator",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "actuator-api_gateway",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/actuator/",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"actuator",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "circuitBreakerEvents",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/user-service/actuator/circuitbreakerevents",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"user-service",
+						"actuator",
+						"circuitbreakerevents"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "http://localhost:8082",
+			"type": "default"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "default"
+		}
+	]
+}

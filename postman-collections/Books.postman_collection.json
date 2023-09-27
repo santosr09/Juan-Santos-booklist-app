@@ -1,0 +1,459 @@
+{
+	"info": {
+		"_postman_id": "9383de15-fbd8-40da-8927-08ae228e0528",
+		"name": "Books",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "books",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"if (pm.response.code == 200) {\r",
+							"    var jsonData = pm.response.json();\r",
+							"    console.info(jsonData.length);\r",
+							"    pm.test('List of Books returned =' + jsonData.length, function(){\r",
+							"        pm.expect(jsonData.length).to.be.at.least(1);\r",
+							"    });\r",
+							"}\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/books",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "filter by author",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/books?Author=Rod Johnson",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"books"
+					],
+					"query": [
+						{
+							"key": "Author",
+							"value": "Rod Johnson"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "cover",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/books/:bookId/covers",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"books",
+						":bookId",
+						"covers"
+					],
+					"variable": [
+						{
+							"key": "bookId",
+							"value": "3a483d1a-f26d-40c8-bc64-61d3817a8d0f"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "filter by category",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/books?Category=COMPUTING",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"books"
+					],
+					"query": [
+						{
+							"key": "Category",
+							"value": "COMPUTING"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "filter by User ID",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/books?User_ID=123A",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"books"
+					],
+					"query": [
+						{
+							"key": "User_ID",
+							"value": "123A"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "published in current year",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/books?Current_Year=true",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"books"
+					],
+					"query": [
+						{
+							"key": "Current_Year",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "oldest book",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/books?oldest_book=true",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"books"
+					],
+					"query": [
+						{
+							"key": "oldest_book",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete by Id",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/books/:id",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"books",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1ABC"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "find by ID Copy",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "{{baseURL}}/books/:id",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"books",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1ABC"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update book",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n        \"name\": \"Refined Granite Fish\",\r\n        \"description\": \"updated description\",\r\n        \"publisher\": \"IO\",\r\n        \"isbn\": \"1234532891825\",\r\n        \"publishedDate\": \"2021-08-26\"\r\n}\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/books/:id",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"books",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1ABC"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update book Copy",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n        \"isbn\": \"9780349400662\"\r\n}\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/books/:id",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"books",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "e33089ff-6d34-43ea-ae36-712d4a714e77"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create books",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var moment = require('moment');\r",
+							"\r",
+							"pm.environment.set('currentdate', moment().format((\"YYYY-MM-DD\")));\r",
+							"\r",
+							"\r",
+							"pm.environment.set(\"randompastdate\", pm.variables.replaceIn('{{$randomDatePast}}'));\r",
+							" let pastdate = pm.environment.get(\"randompastdate\");\r",
+							"pastdate = moment(pastdate);\r",
+							"pm.environment.set(\"pastdate\", pastdate.format(\"YYYY-MM-DD\"));"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{access_token}}",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"{{$randomProductName}}\",\r\n    \"description\": \"{{$randomAdjective}}\",\r\n    \"publisher\": \"{{$randomAbbreviation}}\",\r\n    \"author\": \"{{$randomFullName}}\",\r\n    \"isbn\": \"9780675213585\",\r\n    \"publishedDate\": \"{{pastdate}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseURL}}/books",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"books"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "http://localhost:8082"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "default"
+		}
+	]
+}

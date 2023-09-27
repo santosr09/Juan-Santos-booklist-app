@@ -1,0 +1,7 @@
+FROM logstash:7.17.0
+USER root
+RUN apt-get update
+RUN apt-get install vim -y
+RUN rm -f /usr/share/logstash/pipeline/simple-config.config
+COPY simple-config.config /usr/share/logstash/pipeline/simple-config.config
+CMD ["bin/logstash", "-f", "/usr/share/logstash/pipeline/simple-config.config"]

@@ -1,0 +1,41 @@
+{
+	"info": {
+		"_postman_id": "f3a2884d-85ec-4f29-b29b-d5ce9580b4db",
+		"name": "BookCover service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "cover",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://covers.openlibrary.org/b/:key/:value_size",
+					"protocol": "https",
+					"host": [
+						"covers",
+						"openlibrary",
+						"org"
+					],
+					"path": [
+						"b",
+						":key",
+						":value_size"
+					],
+					"variable": [
+						{
+							"key": "key",
+							"value": "isbn"
+						},
+						{
+							"key": "value_size",
+							"value": "0385342579-M.jpg"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

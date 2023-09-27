@@ -1,0 +1,572 @@
+= Java CoE - Microservices, Containers, Cloud - Knowledge Base
+:toc:
+
+== Connection refused in API gateway when try to access a service through Eureka.
+
+*PROBLEM:*
+
+Connection refused in API gateway when try to access a service through Eureka.
+[source]
+--
+book-api-gateway_1        | 2022-02-21 22:10:42.092 ERROR 1 --- [or-http-epoll-3] a.w.r.e.AbstractErrorWebExceptionHandler : [0f132e96-11]  500 Server Error for HTTP POST "/users"
+book-api-gateway_1        |
+book-api-gateway_1        | io.netty.channel.AbstractChannel$AnnotatedConnectException: finishConnect(..) failed: Connection refused: /172.18.0.4:37037
+book-api-gateway_1        |     Suppressed: reactor.core.publisher.FluxOnAssembly$OnAssemblyException:
+book-api-gateway_1        | Error has been observed at the following site(s):
+book-api-gateway_1        |     *__checkpoint ⇢ org.springframework.cloud.gateway.filter.WeightCalculatorWebFilter [DefaultWebFilterChain]
+book-api-gateway_1        |     *__checkpoint ⇢ org.springframework.boot.actuate.metrics.web.reactive.server.MetricsWebFilter [DefaultWebFilterChain]
+book-api-gateway_1        |     *__checkpoint ⇢ HTTP POST "/users" [ExceptionHandlingWebHandler]
+book-api-gateway_1        | Original Stack Trace:
+book-api-gateway_1        | Caused by: java.net.ConnectException: finishConnect(..) failed: Connection refused
+book-api-gateway_1        |     at io.netty.channel.unix.Errors.newConnectException0(Errors.java:155) ~[netty-transport-native-unix-common-4.1.73.Final.jar!/:4.1.73.Final]
+book-api-gateway_1        |     at io.netty.channel.unix.Errors.handleConnectErrno(Errors.java:128) ~[netty-transport-native-unix-common-4.1.73.Final.jar!/:4.1.73.Final]
+book-api-gateway_1        |     at io.netty.channel.unix.Socket.finishConnect(Socket.java:320) ~[netty-transport-native-unix-common-4.1.73.Final.jar!/:4.1.73.Final]
+--
+
+****
+*SOLUTION:*
+[%hardbreaks]
+The ports on the properties files for services user-service and book-service were genrated randomly (_server.port=${PORT:0}_) this was avoding to bind the docker port with the host port, although the ports were defined in the docker compose as: 
+    _ports:
+      - 8089:8089_
+The docker port didn't correspond with the port generated randomly, so the Api-Gateway couldn't establish the connection with the service running in the docker container.
+The current solution applied was to set the port fixed in the propertie file: server.port=8089 and bind it in the docker-compose file as was being defined:
+_ports:
+      - 8089:8089_
+
+****
+
+*ToDo:*
+Review, alternative solutions and implications for port generated randomly(like the use of --networking: host mode in docker)
+
+*RELATED:*
+https://github.com/spring-cloud/spring-cloud-gateway/issues/2016 (Not an issue/bug)
+https://stackoverflow.com/questions/29971909/use-eureka-despite-having-random-external-port-of-docker-containers
+
+
+== Grant permissions to files in Linux
+
+LINUX Permissions
+https://kb.iu.edu/d/abdb
+
+
+== java.net.UnknownHostException: Failed to resolve 'MACHINE-NAME' after 2 queries
+
+*PROBLEM*
+
+Exception throw in API gateway when try to access a service through Eureka.
+
+[source]
+--
+2022-01-22 04:38:35.970  INFO 20256 --- [nfoReplicator-0] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_USER-SERVICE/REM-LT-211214A.ad.unosquare.com:user-service:8000: registering service...
+2022-01-22 04:38:35.998  INFO 20256 --- [  restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8000 (http) with context path ''
+2022-01-22 04:38:35.999  INFO 20256 --- [  restartedMain] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8000
+2022-01-22 04:38:36.017  INFO 20256 --- [nfoReplicator-0] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_USER-SERVICE/REM-LT-211214A.ad.unosquare.com:user-service:8000 - registration status: 204
+
+
+2022-01-22 04:49:13.882 ERROR 24400 --- [ctor-http-nio-3] a.w.r.e.AbstractErrorWebExceptionHandler : [3bc122ed-1]  500 Server Error for HTTP GET "/users"
+
+java.net.UnknownHostException: Failed to resolve 'REM-LT-211214A.ad.unosquare.com' after 2 queries 
+	at io.netty.resolver.dns.DnsResolveContext.finishResolve(DnsResolveContext.java:1047) ~[netty-resolver-dns-4.1.73.Final.jar:4.1.73.Final]
+	Suppressed: reactor.core.publisher.FluxOnAssembly$OnAssemblyException: 
+Error has been observed at the following site(s):
+	*__checkpoint ⇢ org.springframework.cloud.gateway.filter.WeightCalculatorWebFilter [DefaultWebFilterChain]
+	*__checkpoint ⇢ HTTP GET "/users" [ExceptionHandlingWebHandler]
+--
+
+*SOLUTION:*
+
+If the hostname cannot be determined by Java, then the IP address is sent to Eureka.
+_eureka.instance.prefer-ip-address=true_
+
+Or define the Eureka hostname
+_eureka.instance.hostname=localhost_
+
+*RELATED:*
+https://cloud.spring.io/spring-cloud-netflix/multi/multi_spring-cloud-eureka-server.html#:~:text=2.6%20When%20to%20Prefer%20IP%20Address&text=Set%20eureka.,address%20rather%20than%20its%20hostname.&text=If%20the%20hostname%20cannot%20be,address%20is%20sent%20to%20Eureka.
+
+
+== How to active a Springboot profile
+
+*MAVEN*
+_mvn spring-boot:run -Dspring-boot.run.arguments=--spring.profiles.active=development_
+
+*Docker*
+_docker run -d -e "spring.profiles.active=production" santosr09/user-service_
+
+
+== Notes, to define a Method level security
+
+[source]
+--
+@Secured("ADMIN")
+
+@PreAuthorize("hasAuthority('WRITER') or #id == principal.userId")
+@DeleteMapping(path="/{id}")
+public ResponseEntity deleteUser(@PathVariable String id) {
+--
+
+== Spring Security get deatils of authenticated user.
+
+[source]
+--
+SecurityContextHolder.getContext().getAuthentication().getAuthorities().forEach(a -> log.info(a.getAuthority()));
+log.info("Is authenticated: " + SecurityContextHolder.getContext().getAuthentication().isAuthenticated());
+--
+
+== Problem with hasIpAddress() in Spring Security
+
+*PROBLEM:*
+The Method hasIpAddress() in Security config is throwing an exception 
+
+_.antMatchers("/error/**").hasIpAddress("127.0.0.1")_
+
+[source]
+--
+java.lang.UnsupportedOperationException: public abstract java.lang.String javax.servlet.ServletRequest.getRemoteAddr() is not supported
+--
+
+*RELATED issue:*
+https://github.com/spring-projects/spring-security/issues/10664 (Not a bug)
+
+****
+*(Not solved yet) Implemented SOLUTION:*
+hasIpAddress() was disabled/commentted
+****
+
+
+
+== Error: Failed to replace DataSource with an embedded database for tests. If you want an embedded database please put a supported one...
+
+*PROBLEM:*
+
+Caused by: java.lang.IllegalStateException: Failed to replace DataSource with an embedded database for tests. If you want an embedded database please put a supported one on the classpath or tune the replace attribute of @AutoConfigureTestDatabase.
+	at org.springframework.util.Assert.state(Assert.java:76) ~[spring-core-5.3.14.jar:5.3.14]
+	at org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConfiguration$EmbeddedDataSourceFactory.getEmbeddedDatabase(TestDatabaseAutoConfiguration.java:192) ~[spring-boot-test-autoconfigure-2.6.2.jar:2.6.2]
+	at org.springframework.boot.test.autoconfigure.jdbc.TestDatabaseAutoConf
+	
+****
+*SOLUTION:*
+Define the Datasource properties in the properties file:
+Example:
+[source]
+--
+#Datasource & JPA
+spring.jpa.hibernate.ddl-auto=update
+spring.datasource.url=jdbc:mysql://localhost:3306/test_books?createDatabaseIfNotExist=true
+spring.datasource.username=testuser
+spring.datasource.password={cipher}c7c2fa8258e78a166e6ba34d900c09faa
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
+spring.jpa.hibernate.use-new-id-generator-mappings=false
+--
+****
+
+== On AWS: Access denied for user 'testuser'@'%' to database 'test_books'
+
+*PROBLEM:*
+ON EC2 happens this error:
+
+_java.sql.SQLSyntaxErrorException: Access denied for user 'testuser'@'%' to database 'test_books'_
+
+*SOLUTION:*
+GRANT PERMISSIONS TO testuser in %
+
+
+== Failed to bind properties under 'logging.level' to java.util.Map<java.lang.String, java.lang.String>
+
+*PROBLEM:*
+Failed to bind properties under 'logging.level' to java.util.Map<java.lang.String, java.lang.String>:
+
+[source]
+--
+    Reason: org.springframework.core.convert.ConverterNotFoundException: No converter found capable of converting from type [java.lang.String] to type [java.util.Map<java.lang.String, java.lang.String>]
+--
+
+****
+*SOLUTION:* 
+DEFINE THE LEVEL FOR THE CLASSES THAT WANT BE LOGGED:
+EXAMPLE: logging.level.com.jsantos.userservice.dao.feign.BooksServiceClient=DEBUG
+EXAMPLE: logging.level.com.jsantos.*=DEBUG
+****
+
+== MySQL in Docker: mbind operation not permited.
+
+*PROBLEM:*
+Inside MySQL docker image:
+_mbind operation not permited._
+
+****
+*SOLUTION:*
+
+_--security-opt seccomp=unconfined_
+
+https://thegeekbin.com/mbind-operation-not-permitted-docker-mysql/
+https://docs.docker.com/engine/security/seccomp/#run-without-the-default-seccomp-profile
+
+****
+
+== Spring security JWT token - Illegal base64 character 20
+
+*PROBLEM:*
+This exception is thrown when try to work with JWT token
+
+_Caused by: java.lang.IllegalArgumentException: Illegal base64 character 20_
+
+****
+*SOLUTION:*
+There was a blank space before the JWT string
+
+[source]
+--
+//This was given the error:
+String jwt = authorizationHeader.replace("Bearer", ""); // 'Bearer' whitouth the space at the end
+
+//CORRECT: 
+String jwt = authorizationHeader.replace("Bearer ", "");
+--
+****
+
+== BUG on Resilience4J 1.7.1
+
+*PROBLEM:*
+Exception thrown by Resilence4j 1.7.1:
+
+[source]
+--
+The following method did not exist: 'io.github.resilience4j.spelresolver.SpelResolver io.github.resilience4j.spelresolver.configure.SpelResolverConfiguration.spelResolver
+
+Error creating bean with name 'circuitBreakerAspect' defined in class path resource [io/github/resilience4j/circuitbreaker/autoconfigure/CircuitBreakerConfigurationOnMissingBean.class]: Unsatisfied dependency expressed through method 'circuitBreakerAspect' parameter 3; nested exception is org.springframework.beans.factory.BeanCreationException: 
+
+Error creating bean with name 'spelResolver' defined in class path resource [io/github/resilience4j/spelresolver/autoconfigure/SpelResolverConfigurationOnMissingBean.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [io.github.resilience4j.spelresolver.SpelResolver]: 
+
+Factory method 'spelResolver' threw exception; nested exception is java.lang.NoSuchMethodError: 'io.github.resilience4j.spelresolver.SpelResolver io.github.resilience4j.spelresolver.configure.SpelResolverConfiguration.spelResolver(org.springframework.expression.spel.standard.SpelExpressionParser, org.springframework.core.ParameterNameDiscoverer, org.springframework.beans.factory.BeanFactory)'
+2022-02-03 11:58:09.013  WARN 19404 --- [  restartedMain] s.c.a.AnnotationConfigApplicationContext : Exception thrown from ApplicationListener handling ContextClosedEvent
+--
+
+****
+*SOLVED:*
+use version 1.7.0
+****
+
+== REST TEMPLATE QUERY PARAMS
+
+https://fullstackdeveloper.guru/2020/10/20/how-to-pass-url-and-query-parameters-in-spring-rest-client/
+
+
+== Customize the URL for login:
+
+[source]
+--
+@Configuration
+@RequiredArgsConstructor
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+protected void configure(HttpSecurity http) throws Exception {
+
+	CustomAuthenticationFilter customAuthenticationFilter = new CustomAuthenticationFilter(authenticationManagerBean(), environment);
+	customAuthenticationFilter.setFilterProcessesUrl("/user-service/login");
+--
+
+== Permissions for 'file.pem' are too open. It is required that your private key files are NOT accessible by others
+
+[source]
+--
+ERROR:
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@         WARNING: UNPROTECTED PRIVATE KEY FILE!          @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Permissions for 'uno-ceo.pem' are too open.
+It is required that your private key files are NOT accessible by others.
+This private key will be ignored.
+Load key "uno-ceo.pem": bad permissions
+--
+
+*SOLVED:*
+In PowerShell execute these commands:
+
+[source]
+--
+$path = ".\uno-ceo.pem"
+# Reset to remove explicit permissions
+icacls.exe $path /reset
+# Give current user explicit read-permission
+icacls.exe $path /GRANT:R "$($env:USERNAME):(R)"
+# Disable inheritance and remove inherited permissions
+icacls.exe $path /inheritance:r
+--
+
+== ERROR: Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock:
+
+*SOLVED:*
+_sudo chmod 666 /var/run/docker.sock_
+
+*SOLUTION:*
+https://www.digitalocean.com/community/questions/how-to-fix-docker-got-permission-denied-while-trying-to-connect-to-the-docker-daemon-socket
+
+
+== /var/run/docker.sock: connect: permission denied
+
+DOCKER ERROR ON EC2:
+[source]
+--
+ERROR: Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock: Get "http://%2Fvar%2Frun%2Fdocker.sock/v1.24/info": dial unix /var/run/docker.sock: connect: permission denied
+errors pretty printing info
+--
+
+*SOLUTION:*
+_sudo chmod 666 /var/run/docker.sock_
+
+=================================================================
+Should I mark as Serializable an Entity object?
+
+https://www.baeldung.com/jpa-entities-serializable
+
+https://docs.oracle.com/javaee/6/tutorial/doc/bnbqa.html
+
+Requirements for Entity Classes
+An entity class must follow these requirements.
+
+The class must be annotated with the javax.persistence.Entity annotation.
+
+The class must have a public or protected, no-argument constructor. The class may have other constructors.
+
+The class must not be declared final. No methods or persistent instance variables must be declared final.
+
+If an entity instance is passed by value as a detached object, such as through a session bean’s remote business interface, the class must implement the Serializable interface.
+
+Entities may extend both entity and non-entity classes, and non-entity classes may extend entity classes.
+
+Persistent instance variables must be declared private, protected, or package-private and can be accessed directly only by the entity class’s methods. Clients must access the entity’s state through accessor or business methods.
+
+
+=================================================================
+
+#copy a file from local to EC2 instance
+scp -i ./uno-ceo.pem ./docker-compose.yaml ec2-user@ec2-44-195-232-229.compute-1.amazonaws.com:/home/ec2-user/
+
+
+ssh -i "uno-ceo.pem" ec2-user@ec2-18-212-182-240.compute-1.amazonaws.com
+
+scp -i ./uno-ceo.pem ./docker-compose.yaml ec2-user@ec2-18-212-182-240.compute-1.amazonaws.com:/home/ec2-user/
+
+=================================================================
+
+Best Practices for Many-to-Many Associations with Hibernate and JPA
+
+https://thorben-janssen.com/best-practices-for-many-to-many-associations-with-hibernate-and-jpa/
+
+
+== 
+Udemy course, source code
+
+ZIP: https://github.com/simplyi/PhotoAppApiAlbums/archive/master.zip
+
+Git: https://github.com/simplyi/PhotoAppApiAlbums.git
+
+
+=================
+
+Standard order of all logging levels:
+
+ALL < DEBUG < INFO < WARN < ERROR < FATAL < OFF.
+
+i.e. If logging level set to FATAL then only FATAL messages will be displayed, if logging level set to ERROR then ERROR and FATAL messages will be displayed and so on.
+
+In the below example as we set the logging level to WARN so only WARN, ERROR and FATAL messages will be displayed. The DEBUG and INFO message will not display.
+
+
+=================================================================
+
+
+WARNING! Your password will be stored unencrypted in /home/ec2-user/.docker/config.json.
+Configure a credential helper to remove this warning. See
+https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+
+
+=================================================================
+
+No EntityManager with actual transaction available for current thread
+
+2022-02-02 11:40:54.569 ERROR 19288 --- [o-auto-1-exec-2] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is org.springframework.dao.InvalidDataAccessApiUsageException: No EntityManager with actual transaction available for current thread - cannot reliably process 'remove' call; nested exception is javax.persistence.TransactionRequiredException: No EntityManager with actual transaction available for current thread - cannot reliably process 'remove' call] with root cause
+
+javax.persistence.TransactionRequiredException: No EntityManager with actual transaction available for current thread - cannot reliably process 'remove' call
+	at org.springframework.orm.jpa.SharedEntityManagerCreator$SharedEntityManagerInvocationHandler.invoke(SharedEntityManagerCreator.java:295) ~[spring-orm-5.3.14.jar:5.3.14]
+	at jdk.proxy3/jdk.proxy3.$Proxy164.remove(Unknown Source) ~[na:na]
+
+
+SOLVED:
+https://stackoverflow.com/questions/32269192/spring-no-entitymanager-with-actual-transaction-available-for-current-thread
+
+
+The @PersistenceContext annotation has an optional attribute type, which defaults to PersistenceContextType.TRANSACTION. This default is what you need to receive a shared EntityManager proxy. The alternative, PersistenceContextType.EXTENDED, is a completely different affair: This results in a so-called extended EntityManager, which is not thread-safe and hence must not be used in a concurrently accessed component such as a Spring-managed singleton bean. Extended EntityManagers are only supposed to be used in stateful components that, for example, reside in a session, with the lifecycle of the EntityManager not tied to a current transaction but rather being completely up to the application.
+
+
+=================================================================
+
+STEPS TO RECREATE AN IMAGE
+1-Stop running container related to the image
+2-Delete container related to the image
+3-Delete the image
+4-Build the image
+5-Create container with new image
+
+
+LIST RUNNING CONTAINERS:
+docker ps
+
+LIST ALL THE CONTAINERS(RUNNING AND STOPPED)
+docker ps -a
+
+STOP A CONTAINER
+docker stop <CONTAINER-ID>
+
+START AN EXISTING CONTAINER
+docker start <CONTAINER-ID>
+
+PULL AN IMAGE FROM A REPOSITORY:
+docker pull <IMAGE-NAME> 
+docker pull <IMAGE-NAME>:<VERSION-NUMBER>
+
+CREATE A CONTAINER, PULLS THE IMAGE IF DOESN'T EXIST AND STARTED:
+docker run <IMAGE-NAME>
+with an specific verion:
+docker run <IMAGE-NAME>:<VERSION-NUMBER>
+
+CREATE A NAMED CONTAINER
+docker run -p<HOST-PORT>:<CONTAINER-PORT> --name <CONTAINER-NAME> <IMAGE>
+with an specific verion
+docker run <IMAGE-NAME>:<VERSION-NUMBER>
+
+DELETE A CONTAINER
+docker rm <CONTAINER-ID>
+
+WATCH THE LOGS FROM A CONTAINER:
+docker logs <CONTAINER-ID>
+
+or with a named container:
+docker logs <CONTAINER-NAME>
+
+GET THE TERMINAL OF THE DOCKER CONTAINER:
+docker exec -it <CONTAINER-ID> /bin/bash
+or with sh
+docker exec -it <CONTAINER-ID> /bin/sh
+wirh a named container
+docker exec -it <CONTAINER-NAME> /bin/sh
+
+-----------------------------------------------------------
+-----------------------------------------------------------
+** BUILD/CREATE A DOCKER IMAGE: **
+docker build --tag=<IMAGE-NAME> --force-rm=true .
+with a version number
+docker build --tag=<IMAGE-NAME>:<VERSION-NUMBER> --force-rm=true .
+
+TAG AN IMAGE
+docker tag SOURCE_IMAGE[:TAG] TARGET_IMAGE[:TAG]
+
+BEFORE PUSH AN IMAGE TO A REPOSITORY, SHOULD BE TAGGED
+docker tag <IMAGE-ID> santosr09/<REPOSITORY-NAME>
+
+PUSH AN IMAGE TO THE REPOSITORY:
+docker push santosr09/<IMAGE-NAME>
+-----------------------------------------------------------
+-----------------------------------------------------------
+
+DELETE AN IMAGE:
+docker rmi <IMAGE-ID>
+The image must not be in used from any container (even stopped container), if is in use, the container(s) must be deleted.
+with -force option
+docker rmi -f <IMAGE-ID> 
+
+
+discovery-service
+user-service
+books-api-gateway
+
+
+docker-compose -f mongo.yml up
+docker-compose -f mongo.yml down
+
+SCRIPT FOR POSTMAN:
+var moment = require('moment');
+
+pm.environment.set('currentdate', moment().format(("YYYY-MM-DD")));
+
+SET ENVIRONMENT VARIABLE IN A DOCKER RUN
+
+-e "spring.cloud.config.uri=http://"
+
+BUILD/CREATE A DOCKER IMAGE:
+docker build --tag=discovery-service --force-rm=true .
+
+docker build --tag=discovery-service:1.0.0 --force-rm=true .
+docker build --tag=book-service:1.0.0 --force-rm=true .
+docker build --tag=user-service:1.0.0 --force-rm=true .
+docker build --tag=books-api-gateway:1.0.0 --force-rm=true .
+
+docker run -p8010:8010 --network books-network --name discovery-service discovery-service
+docker run -p8082:8082 --network books-network --name books-api-gateway books-api-gateway
+
+CREATE A CONTAINER:
+docker run <IMAGE-NAME>
+
+TAG AN IMAGE
+docker tag discovery-service:1.0.0 discovery-service:latest
+
+PUSH DOCKER IMAGE
+docker tag santosr09/discovery-service:latest santosr09/discovery-service:1.0.0
+
+docker push santosr09/discovery-service:1.0.0
+
+DOCKER RUN WITH NAME
+docker run -p8010:8010 --network books-network --name discovery-service discovery-service
+
+docker run -p8010:8010 --network books-network --name
+docker run -p8010:8010 --network books-network --name
+docker run -p8010:8010 --network books-network --name
+
+docker run -p8082:8082 -e "eureka.client.serviceUrl.defaultZone=http://172.19.0.2:8010/eureka" --network books-network --name books-api-gateway books-api-gateway
+
+CREATE MYSQL DOCKER
+
+docker run -dp 3306:3306 --name mysql-docker-container -e MYSQL_ROOT_PASSWORD=testuser -e MYSQL_DATABSE=test_books -e MYSQL_PASSWORD=loma1234 mysql:latest
+
+CRETAE DOCKER NETWORK
+docker create network bookapp-network
+
+
+
+SET JAVA_HOME IN WINDOWS 10
+
+setx -m JAVA_HOME "C:\dev\jdk\jdk-17.0.1"
+
+
+VOLUME FOR MySql
+
+mysql:- /var/lib/mysql
+
+
+Windows Docker volume location
+c:\ProgramData\docker\volumes
+
+
+
+DOCKER COMPOSE:
+instead using localhost use the name of the service(docker).
+
+For example in the application.properties:
+Instead:
+eureka.client.serviceUrl.defaultZone=http://localhost:8010/eureka
+use:
+eureka.client.serviceUrl.defaultZone=http://discovery-service:8010/eureka
+
+
+
+=================================================================
+
+book-api-gateway_1        |
+book-api-gateway_1        | 2022-02-18 18:59:39.441  WARN 1 --- [nfoReplicator-0] c.n.d.s.t.d.RetryableEurekaHttpClient    : Request execution failed with message: I/O error on POST request for "http://ec2-3-16-111-32.us-east-2.compute.amazonaws.com:8010/eureka/apps/API-GATEWAY": ec2-3-16-111-32.us-east-2.compute.amazonaws.com:8010 failed to respond; nested exception is org.apache.http.NoHttpResponseException: ec2-3-16-111-32.us-east-2.compute.amazonaws.com:8010 failed to respond
+book-api-gateway_1        | 2022-02-18 18:59:39.462  WARN 1 --- [nfoReplicator-0] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_API-GATEWAY/ee73c7c137fd:api-gateway:8082 - registration failed Cannot execute request on any known server
+
+
+=================================================================
+

@@ -1,0 +1,32 @@
+version: '3'
+services:
+  book-service:
+    image: santosr09/book-service
+    ports:
+      - 8088:8088
+    environment:
+      - spring.profiles.active=development
+      - spring.cloud.config.uri=http://config-server:8888
+    volumes:
+      - api-logs:/api-logs
+  book-user-service:
+    image: santosr09/book-user-service
+    ports:
+      - 8089:8089
+    environment:
+      - spring.profiles.active=development
+      - spring.cloud.config.uri=http://config-server:8888
+      - spring.zipkin.baseUrl=http://zipkin:9411
+    volumes:
+      - api-logs:/api-logs
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - 9411:9411
+volumes:
+  api-logs:
+    driver: local
+networks:
+  default:
+    external: true
+    name: config-server_default

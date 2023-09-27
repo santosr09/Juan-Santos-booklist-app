@@ -1,0 +1,30 @@
+version: '3'
+services:
+  book-discovery-service:
+    image: santosr09/book-discovery-service
+    ports:
+      - 8010:8010
+    environment:
+      - spring.profiles.active=development
+  book-api-gateway:
+    image: santosr09/book-api-gateway
+    ports:
+      - 8082:8082
+    environment:
+      - spring.profiles.active=development
+      - spring.cloud.config.uri=http://config-server:8888
+  elasticsearch:
+    image: elasticsearch:7.17.0
+    ports:
+      - 9200:9200
+      - 9300:9300
+    environment:
+      - discovery.type=single-node
+  kibana:
+    image: kibana:7.17.0
+    ports:
+      - 5601:5601
+networks:
+  default:
+    external: true
+    name: config-server_default

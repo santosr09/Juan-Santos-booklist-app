@@ -1,0 +1,196 @@
+= SPRING BOOT DEMO - BOOK LIST APPLICATION
+:toc:
+
+== SERVICE
+Create a small service that allows creating, updating, and deleting users and books using Spring boot. 
+The data we will store are:
+BOOKS
+* Book Name
+* Book Description
+* Publisher
+* Author
+* ISBN
+* Published Date
+CATEGORIES
+* Category Name
+USERS
+* First Name
+* Last Name
+* Country
+* Registration Date
+* Username
+* Password
+
+Note: Users may like one or more books. Books may have one or more categories, Categories may be assigned to multiple Books.
+
+Requisites: 
+a) Use a MySQL database.
+b) Use JPA.
+c) Use Hibernate.
+d) Include unit testing using JUnit and Mockito
+e) Include also your Postman collection of tests
+
+The expected list of APIs are:
+. Save a book
+. Update a book
+. Delete a book
+. Save a user
+. Update a user
+. Delete a user
+. Save a category
+. Assing a single category into a book
+. Delete a category
+IMPORTANT: Categories and Books must be previously saved before getting assigned.
+
+Push your changes into your github CoE repository. 
+Please make regular commits so we can review your progress and mark your progress in the checklist below.
+
+
+
+
+https://stackoverflow.com/questions/42135114/how-does-spring-jpa-hibernate-ddl-auto-property-exactly-work-in-spring
+https://www.baeldung.com/hibernate-identifiers
+
+
+https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html
+
+
+
+SQL statements:
+
+table: books
+
+INSERT INTO `test_books`.`books`
+(`id`,
+`author`,
+`description`,
+`isbn`,
+`name`,
+`published_date`,
+`publisher`,
+`user_id`,
+`book_id`)
+VALUES
+(<{id: }>,
+<{author: }>,
+<{description: }>,
+<{isbn: }>,
+<{name: }>,
+<{published_date: }>,
+<{publisher: }>,
+<{user_id: }>,
+<{book_id: }>);
+
+
+CREATE TABLE `books` (
+  `id` bigint NOT NULL,
+  `author` varchar(255) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `isbn` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `published_date` varchar(255) DEFAULT NULL,
+  `publisher` varchar(255) DEFAULT NULL,
+  `user_id` bigint DEFAULT NULL,
+  `book_id` bigint DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+
+
+table: categories
+
+INSERT INTO `test_books`.`categories`
+(`id`,
+`name`)
+VALUES
+(<{id: }>,
+<{name: }>);
+
+
+CREATE TABLE `categories` (
+  `id` bigint NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+
+
+table: books_categories
+
+INSERT INTO `test_books`.`books_categories`
+(`book_id`,
+`category_id`)
+VALUES
+(<{book_id: }>,
+<{category_id: }>);
+
+
+CREATE TABLE `books_categories` (
+  `book_id` bigint NOT NULL,
+  `category_id` bigint NOT NULL,
+  PRIMARY KEY (`book_id`,`category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+
+
+https://www.baeldung.com/maven-run-single-test
+If we want to execute a single test class, we can execute the command: mvn test -Dtest=”TestClassName”.
+we can ask the Maven surefire plugin to execute a single test method by passing -Dtest=”TestClassName#TestMethodName” to the mvn command
+Execute multiple test classes by name: -Dtest=”TestClassName1, TestClassName2, TestClassName3…”
+Execute multiple test classes by name pattern: -Dtest=”*ServiceUnitTest” or -Dtest=”The*UnitTest, Controller*Test”
+Specify multiple test methods by name: -Dtest=”ClassName#method1+method2″
+Specify multiple method names by name pattern: -Dtest=”ClassName#whenSomethingHappens_*”
+
+
+
+
+
+2022-01-07 23:06:01.257  WARN 26752 --- [nio-8080-exec-6] o.h.engine.jdbc.spi.SqlExceptionHelper   : SQL Error: 1146, SQLState: 42S02
+2022-01-07 23:06:01.258 ERROR 26752 --- [nio-8080-exec-6] o.h.engine.jdbc.spi.SqlExceptionHelper   : Table 'test_books.hibernate_sequence' doesn't exist
+2022-01-07 23:06:01.275 ERROR 26752 --- [nio-8080-exec-6] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is org.springframework.dao.InvalidDataAccessResourceUsageException: error performing isolated work; SQL [n/a]; nested exception is org.hibernate.exception.SQLGrammarException: error performing isolated work] with root cause
+
+java.sql.SQLSyntaxErrorException: Table 'test_books.hibernate_sequence' doesn't exist
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:120) ~[mysql-connector-java-8.0.27.jar:8.0.27]
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122) ~[mysql-connector-java-8.0.27.jar:8.0.27]
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:953) ~[mysql-connector-java-8.0.27.jar:8.0.27]
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeQuery(ClientPreparedStatement.java:1009) ~[mysql-connector-java-8.0.27.jar:8.0.27]
+	
+	
+	
+Query paramaters needs to be documented on the API (swagger)
+
+java.coe@unosquare.com
+Tr41n1ng2018
+
+
+https://bcrypt-generator.com/
+
+
+Spring Boot and Spring Security with JWT including Access and Refresh Tokens:
+https://www.youtube.com/watch?v=VVn9OG9nfH0
+
+
+
+
+
+https://jwt.io/
+
+
+<<<<<<< HEAD
+
+
+Create REST calls that show the following information:
+- All book titles filtered by author
+- Titles for all books published this year 
+- All book titles filtered by category
+- The oldest book with title, description, author, published date and all its categories
+
+Requisites: 
+a) Use streams
+b) Use optionals
+d) Include unit testing using JUnit and Mockito
+e) Include also your Postman collection of tests
+
+Push your changes into your github CoE repository. 
+Please make regular commits so we can review your progress and mark your progress in the checklist below.
+=======
+>>>>>>> feature-security

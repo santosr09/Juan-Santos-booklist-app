@@ -1,0 +1,32 @@
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  
+  <parent>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-parent</artifactId>
+	<version>2.6.2</version>
+	<relativePath/> <!-- lookup parent from repository -->
+  </parent>
+ 
+  <groupId>com.jsantos</groupId>
+  <artifactId>book-app</artifactId>
+  <version>1</version>
+  <packaging>pom</packaging>
+  
+  <profiles>
+   <profile>
+    <id>noTest</id>
+     <properties>
+        <maven.test.skip>true</maven.test.skip>
+     </properties>
+  </profile>
+ </profiles>
+   
+  <modules>
+    <module>user-service</module>
+	<module>book-service</module>
+	<module>api-gateway</module>
+	<module>config-server</module>
+	<module>eureka-discovery-service</module>
+  </modules>
+</project>

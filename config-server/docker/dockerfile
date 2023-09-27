@@ -1,0 +1,4 @@
+FROM openjdk:17-jdk-alpine
+VOLUME /tmp
+COPY target/book-config-server-0.0.1-SNAPSHOT.jar book-config-server.jar
+ENTRYPOINT ["java","-jar","book-config-server.jar"]

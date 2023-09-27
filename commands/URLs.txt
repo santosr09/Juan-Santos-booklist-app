@@ -1,0 +1,58 @@
+# AWS EC2 INSTANCES:
+
+# CONFIG-SERVER AND RABBITMQ:
+ssh -i "C:\dev\test\keypairs\book-app-keyPair.pem" ec2-user@ec2-18-191-130-250.us-east-2.compute.amazonaws.com
+ec2-18-191-130-250.us-east-2.compute.amazonaws.com
+
+# MYSQL AND LOGSTASH:
+ssh -i "C:\dev\test\keypairs\book-app-keyPair.pem" ec2-user@ec2-3-14-79-172.us-east-2.compute.amazonaws.com
+ec2-3-14-79-172.us-east-2.compute.amazonaws.com
+
+# EUREKA, API GATEWAY, Microservices and ELASTICSEARCH AND KIBANA:
+ssh -i "C:\dev\test\keypairs\book-app-keyPair.pem" ec2-user@ec2-3-139-64-47.us-east-2.compute.amazonaws.com
+ec2-3-139-64-47.us-east-2.compute.amazonaws.com
+
+scp -i "C:\dev\test\keypairs\book-app-keyPair.pem" ./docker-compose.yaml ec2-user@ec2-3-139-64-47.us-east-2.compute.amazonaws.com:/home/ec2-user/
+
+# ========================================================================================
+docker-compose stop
+docker-compose -f docker-compose.yaml up
+
+config server:
+http://localhost:8888
+
+Bus refresh:
+http://localhost:8888/actuator/busrefresh
+
+Zipkin:
+http://localhost:9411/zipkin
+
+KIBANA:
+http://localhost:5601
+
+
+ELASTICSEARCH
+http://localhost:9200
+
+
+COMMANDS
+#LOGSTASH
+cd C:\dev\tools\ELK\logstash-7.17.0
+bin\logstash -f simple-config.config
+
+#ELASTICSEARCH
+cd C:\dev\tools\ELK\elasticsearch-7.17.0
+bin\elasticsearch.bat
+
+#KIBANA
+cd C:\dev\tools\ELK\
+bin\kibana.bat 
+
+#CONFIG SERVER, ELASTIC IP
+3.234.124.124
+
+#EUREKA DISCOVERY, ELASTIC IP
+44.195.232.229
+
+VPC IPv4 CIDR
+172.31.0.0/16

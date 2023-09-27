@@ -1,0 +1,117 @@
+{
+	"info": {
+		"_postman_id": "f03fc646-7aff-4852-a7e8-4199463e59ca",
+		"name": "Elasticsearch",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Elasticsearch",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}",
+					"host": [
+						"{{baseURL}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "cat",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/_cat",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"_cat"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "indices",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/_cat/indices",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"_cat",
+						"indices"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "search_pretty",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseURL}}/user-service-log-2022.02.04/_search?q=*&format&pretty",
+					"host": [
+						"{{baseURL}}"
+					],
+					"path": [
+						"user-service-log-2022.02.04",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "q",
+							"value": "*"
+						},
+						{
+							"key": "format",
+							"value": null
+						},
+						{
+							"key": "pretty",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseURL",
+			"value": "http://localhost:9200",
+			"type": "default"
+		}
+	]
+}
